@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRESOC Operations Ecosystem</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #001f3f 0%, #0099ff 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .logo-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+            margin-bottom: 20px;
+        }
+
+        .flutter-logo {
+            font-size: 36px;
+            font-weight: bold;
+            color: #001f3f;
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #0099ff, #001f3f);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .cresoc-logo {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #0099ff, #001f3f);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            font-weight: bold;
+            color: white;
+            box-shadow: 0 5px 15px rgba(0, 153, 255, 0.3);
+        }
+
+        h1 {
+            color: #001f3f;
+            font-size: 42px;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .tagline {
+            color: #999;
+            font-size: 14px;
+            font-style: italic;
+        }
+
+        .ecosystem {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .node {
+            padding: 20px 30px;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            text-align: center;
+            min-width: 180px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border: 3px solid transparent;
+        }
+
+        .node:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .input {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            border-color: #1976d2;
+            color: #1565c0;
+        }
+
+        .operation {
+            background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+            border-color: #f57c00;
+            color: #e65100;
+        }
+
+        .service {
+            background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%);
+            border-color: #7b1fa2;
+            color: #6a1b9a;
+        }
+
+        .output {
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            border-color: #388e3c;
+            color: #2e7d32;
+        }
+
+        .row-label {
+            font-size: 14px;
+            font-weight: bold;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            font-size: 40px;
+            font-weight: bold;
+            color: #999;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .close:hover {
+            color: #333;
+        }
+
+        .modal-content h2 {
+            color: #001f3f;
+            margin-bottom: 20px;
+            font-size: 32px;
+        }
+
+        .modal-content h3 {
+            color: #0099ff;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+
+        .modal-content ul {
+            list-style-position: inside;
+            line-height: 1.8;
+            color: #444;
+        }
+
+        .modal-content li {
+            margin-bottom: 10px;
+        }
+
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .legend-color {
+            width: 30px;
+            height: 30px;
+            border-radius: 8px;
+            border: 2px solid #333;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 28px;
+            }
+
+            .node {
+                min-width: 140px;
+                padding: 15px 20px;
+                font-size: 14px;
+            }
+
+            .modal-content {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo-container">
+                <div class="flutter-logo">Flutter</div>
+                <div class="cresoc-logo">🛡️</div>
+            </div>
+            <h1>CRESOC Operations Ecosystem</h1>
+            <p class="subtitle">Corporate Real Estate Operations & Security Center</p>
+            <p class="tagline">👆 Click any element to explore detailed information</p>
+        </header>
+
+        <div class="ecosystem">
+            <div class="row-label">📥 WHAT COMES TO US (Inputs)</div>
+            <div class="row">
+                <div class="node input" data-modal="travelData">✈️ Travel Bookings</div>
+                <div class="node input" data-modal="intelligence">🌍 Intelligence Feeds</div>
+                <div class="node input" data-modal="employeeRequests">👥 Employee Requests</div>
+                <div class="node input" data-modal="workdayData">📊 Workday Data</div>
+                <div class="node input" data-modal="incidents">🚨 Incident Reports</div>
+                <div class="node input" data-modal="accessRequests">🔐 Security Systems</div>
+            </div>
+
+            <div class="row-label">⚙️ CRESOC OPERATIONS CENTER</div>
+            <div class="row">
+                <div class="node operation" data-modal="monitoring">👁️ 24/7 Monitoring</div>
+                <div class="node operation" data-modal="assessment">🎯 Risk Assessment</div>
+                <div class="node operation" data-modal="investigation">🔍 Investigation</div>
+                <div class="node operation" data-modal="coordination">🤝 Coordination</div>
+                <div class="node operation" data-modal="communication">📣 Communication</div>
+            </div>
+
+            <div class="row-label">🛡️ SERVICES WE DELIVER</div>
+            <div class="row">
+                <div class="node service" data-modal="travelRisk">✈️ Travel Risk Management</div>
+                <div class="node service" data-modal="securitySystems">🎥 Security Systems Management</div>
+                <div class="node service" data-modal="threatIntel">🔍 Threat Intelligence</div>
+                <div class="node service" data-modal="incidentMgmt">🚨 Incident Management</div>
+                <div class="node service" data-modal="execProtection">👔 Executive Protection</div>
+                <div class="node service" data-modal="physicalSec">🏢 Physical Security Ops</div>
+                <div class="node service" data-modal="support247">📞 24/7 Support</div>
+            </div>
+
+            <div class="row-label">📤 WHO WE SERVE (Outputs)</div>
+            <div class="row">
+                <div class="node output" data-modal="employees">👥 All Employees</div>
+                <div class="node output" data-modal="exco">👔 Executive Committee</div>
+                <div class="node output" data-modal="securityTeams">🛡️ Security Teams</div>
+                <div class="node output" data-modal="workspace">🏢 Workspace Teams</div>
+            </div>
+        </div>
+
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-color" style="background: linear-gradient(135deg, #e3f2fd, #bbdefb);"></div>
+                <span>Inputs</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: linear-gradient(135deg, #fff3e0, #ffe0b2);"></div>
+                <span>Operations</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: linear-gradient(135deg, #f3e5f5, #e1bee7);"></div>
+                <span>Services</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: linear-gradient(135deg, #e8f5e9, #c8e6c9);"></div>
+                <span>Outputs</span>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div id="modal-body"></div>
+        </div>
+    </div>
+
+    <script>
+        const modalData = {
+            // INPUTS
+            travelData: {
+                title: "✈️ Travel Bookings",
+                sections: {
+                    "Sources": [
+                        "Egencia travel booking feed (automated integration)",
+                        "Manual itinerary uploads via email/form",
+                        "Direct employee submissions for non-Egencia bookings",
+                        "Leadership travel notifications"
+                    ],
+                    "What We Track": [
+                        "Destination countries and cities",
+                        "Travel dates and duration",
+                        "Traveler details and contact information",
+                        "Risk rating of destinations (Low/Medium/High/Extreme)",
+                        "Flight details and accommodation"
+                    ],
+                    "Used For": [
+                        "Travel Risk Management service - Pre-trip advisories",
+                        "Country briefings (5 days before departure)",
+                        "Travel advisories (3 days before departure)",
+                        "Emergency assistance coordination during travel",
+                        "Leadership travel monitoring"
+                    ]
+                }
+            },
+            intelligence: {
+                title: "🌍 Intelligence Feeds",
+                sections: {
+                    "Sources": [
+                        "Healix - Medical and security intelligence",
+                        "Crisis24 - Global event monitoring and alerts",
+                        "Ontic - OSINT and threat intelligence platform",
+                        "Dark web monitoring tools",
+                        "Social media analytics"
+                    ],
+                    "What We Track": [
+                        "Global security events and incidents",
+                        "Political instability and civil unrest",
+                        "Natural disasters and weather events",
+                        "Health alerts and disease outbreaks",
+                        "Terrorism threats and criminal activity",
+                        "Digital threats and brand mentions"
+                    ],
+                    "Used For": [
+                        "Threat Intelligence & Monitoring service",
+                        "Travel risk assessments and advisories",
+                        "Executive protection briefings",
+                        "Event impact communications via Slack",
+                        "Proactive employee welfare checks"
+                    ]
+                }
+            },
+            employeeRequests: {
+                title: "👥 Employee Requests",
+                sections: {
+                    "Sources": [
+                        "CRESOC shared email inbox",
+                        "Slack channel (#cresoc-alerts)",
+                        "Direct employee emails and calls",
+                        "Healix Mayday emergency assistance line",
+                        "Regional Security Specialist referrals"
+                    ],
+                    "What We Track": [
+                        "Nature of request (travel, access, incident, emergency)",
+                        "Urgency level and required response time",
+                        "Employee location and contact details",
+                        "Request status and resolution timeline",
+                        "Follow-up actions and closure confirmation"
+                    ],
+                    "Used For": [
+                        "24/7 Operational Support service",
+                        "Emergency assistance coordination",
+                        "Travel risk queries and support",
+                        "Access management requests",
+                        "General security inquiries and guidance"
+                    ]
+                }
+            },
+            workdayData: {
+                title: "📊 Workday Data",
+                sections: {
+                    "Sources": [
+                        "Workday automated reports (Joiners, Leavers, Movers)",
+                        "HR notifications for personnel changes",
+                        "No-show reports for access cleanup",
+                        "Organizational structure updates",
+                        "Employee location and role information"
+                    ],
+                    "What We Track": [
+                        "New joiners requiring access provisioning",
+                        "Leavers requiring immediate access removal",
+                        "Movers requiring access modifications",
+                        "No-shows for access card deactivation",
+                        "Employee details for travel and protection services"
+                    ],
+                    "Used For": [
+                        "Security Systems Management - Access provisioning/removal",
+                        "48-hour joiner access setup",
+                        "24-hour priority leaver access removal",
+                        "Access modifications for role changes",
+                        "Audit trail and compliance documentation"
+                    ]
+                }
+            },
+            incidents: {
+                title: "🚨 Incident Reports",
+                sections: {
+                    "Sources": [
+                        "Direct incident reports from employees",
+                        "Site managers and POC notifications",
+                        "CCTV system alerts and monitoring",
+                        "Regional Security Specialist escalations",
+                        "Workspace team incident referrals",
+                        "Healix emergency assistance notifications"
+                    ],
+                    "What We Track": [
+                        "Incident type (security, safety, medical, travel)",
+                        "Location, date, time, and involved parties",
+                        "Severity level and immediate risks",
+                        "Actions taken and response timeline",
+                        "Evidence collected (CCTV, statements, photos)",
+                        "Resolution status and follow-up requirements"
+                    ],
+                    "Used For": [
+                        "Incident Management & Support service",
+                        "CCTV investigation and footage retrieval (4-hour SLA)",
+                        "Emergency assistance coordination via Healix",
+                        "Incident documentation in Ontic and Asana",
+                        "Investigation support for Regional Security Specialists",
+                        "Compliance and audit trail maintenance"
+                    ]
+                }
+            },
+            accessRequests: {
+                title: "🔐 Security Systems",
+                sections: {
+                    "Sources": [
+                        "Jira ticket system (leaver processing)",
+                        "Workday automated feeds (joiners, leavers, movers)",
+                        "Direct requests via email and Slack",
+                        "Corrigo work orders for physical access",
+                        "Regional Security Specialist requests",
+                        "Workspace team coordination"
+                    ],
+                    "What We Track": [
+                        "Access type (physical cards, dual-factor auth, system access)",
+                        "Request urgency (standard vs. priority)",
+                        "Employee details and location",
+                        "Access level and restricted area permissions",
+                        "Approval status and completion timeline"
+                    ],
+                    "Used For": [
+                        "Security Systems Management service",
+                        "Access provisioning (joiners - 48 hours)",
+                        "Access removal (leavers - 24 hours priority)",
+                        "Access modifications (movers)",
+                        "Dual-factor authentication PIN generation",
+                        "Monthly critical area audits and compliance"
+                    ]
+                }
+            },
+
+            // OPERATIONS
+            monitoring: {
+                title: "👁️ 24/7 Monitoring",
+                sections: {
+                    "What We Do": [
+                        "Continuous monitoring of global intelligence feeds",
+                        "Real-time tracking of employee travel",
+                        "CCTV and security system health monitoring",
+                        "Digital footprint monitoring for Executive Committee",
+                        "Dark web and OSINT monitoring for threats",
+                        "Event impact assessment for Flutter locations"
+                    ],
+                    "Methods": [
+                        "Automated alerts from Healix, Crisis24, and Ontic",
+                        "Manual review of intelligence reports",
+                        "Proactive scanning of news and social media",
+                        "CCTV system health checks and alerts",
+                        "Executive Committee digital footprint analysis (24/7)",
+                        "Customer threat actor monitoring"
+                    ],
+                    "Outputs": [
+                        "High-impact event intelligence reports (2-hour SLA)",
+                        "Travel advisories and country briefings",
+                        "Executive protection briefings",
+                        "Event impact communications via Slack",
+                        "Proactive welfare checks for affected employees",
+                        "System health alerts and fault notifications"
+                    ]
+                }
+            },
+            assessment: {
+                title: "🎯 Risk Assessment",
+                sections: {
+                    "What We Do": [
+                        "Evaluate risk levels for travel destinations",
+                        "Assess threat severity and potential impact",
+                        "Analyze incident reports for patterns and trends",
+                        "Determine appropriate response and escalation",
+                        "Prioritize actions based on urgency and risk",
+                        "Correlate threats across multiple sources"
+                    ],
+                    "Methods": [
+                        "Risk rating matrix (Low/Medium/High/Extreme)",
+                        "Intelligence analysis and correlation",
+                        "Historical incident data review",
+                        "Consultation with Regional Security Specialists",
+                        "Threat actor profiling and pattern analysis",
+                        "Executive Committee threat correlation"
+                    ],
+                    "Outputs": [
+                        "Risk-rated travel advisories and briefings",
+                        "Threat assessment reports for Executive Committee",
+                        "Incident severity classifications",
+                        "Recommended protective actions",
+                        "Escalation decisions and notifications",
+                        "Protective intelligence briefings"
+                    ]
+                }
+            },
+            investigation: {
+                title: "🔍 Investigation",
+                sections: {
+                    "What We Do": [
+                        "CCTV footage retrieval and review (4-hour SLA)",
+                        "Incident evidence collection and documentation",
+                        "Timeline reconstruction and analysis",
+                        "Witness statement coordination",
+                        "Digital forensics for threat intelligence",
+                        "Support Regional Security Specialists with investigations"
+                    ],
+                    "Methods": [
+                        "CCTV system access and footage extraction",
+                        "Ontic platform for incident documentation",
+                        "Photo and video evidence collection",
+                        "Interview coordination and statement recording",
+                        "Dark web and OSINT investigation",
+                        "Cross-referencing multiple data sources"
+                    ],
+                    "Outputs": [
+                        "CCTV footage provided within 4 hours",
+                        "Comprehensive incident reports in Ontic and Asana",
+                        "Evidence packages for investigations",
+                        "Timeline documentation and analysis",
+                        "Threat actor profiles and intelligence reports",
+                        "Investigation support for Regional Security Specialists"
+                    ]
+                }
+            },
+            coordination: {
+                title: "🤝 Coordination",
+                sections: {
+                    "What We Do": [
+                        "Coordinate emergency assistance via Healix Mayday",
+                        "Liaise with Regional Security Specialists",
+                        "Connect employees with appropriate support services",
+                        "Coordinate with Workspace teams on access and security",
+                        "Manage vendor relationships (Healix, Chubb, Crisis24, Ontic)",
+                        "Coordinate POC and site manager notifications"
+                    ],
+                    "Methods": [
+                        "Multi-channel communication (email, Slack, phone, Healix)",
+                        "Escalation protocols and decision trees",
+                        "Vendor platform integration and coordination",
+                        "Regional Security Specialist backup support",
+                        "Cross-functional team collaboration",
+                        "Emergency response protocols"
+                    ],
+                    "Outputs": [
+                        "Emergency assistance activation and coordination",
+                        "Stakeholder notifications and updates",
+                        "Vendor service requests and follow-up",
+                        "Coordinated response to incidents and events",
+                        "POC/site manager emergency notifications",
+                        "Seamless handoffs to Regional Security Specialists"
+                    ]
+                }
+            },
+            communication: {
+                title: "📣 Communication",
+                sections: {
+                    "What We Do": [
+                        "Send travel advisories (3 days before departure)",
+                        "Deliver country briefings (5 days before departure)",
+                        "Issue event impact communications via Slack",
+                        "Provide Executive Committee briefings and reports",
+                        "Notify stakeholders of incidents and resolutions",
+                        "Send proactive welfare checks during events"
+                    ],
+                    "Methods": [
+                        "Automated email notifications via Power Automate",
+                        "Slack channel updates (#cresoc-alerts)",
+                        "Direct phone calls for emergencies",
+                        "Executive Committee digital footprint reports (daily)",
+                        "Ontic platform notifications",
+                        "Asana task updates and tracking"
+                    ],
+                    "Outputs": [
+                        "Travel advisories and country briefings",
+                        "Event impact communications",
+                        "Executive protection briefings",
+                        "Incident notifications and updates",
+                        "Welfare check confirmations",
+                        "Stakeholder status reports and closures"
+                    ]
+                }
+            },
+
+            // SERVICES
+            travelRisk: {
+                title: "✈️ Travel Risk Management",
+                sections: {
+                    "What We Deliver": [
+                        "Travel advisories (3 days before travel to Medium/High-risk countries)",
+                        "Country briefings (5 days before travel with location-specific info)",
+                        "Travel insurance generation via Chubb",
+                        "Leadership travel monitoring",
+                        "Emergency assistance coordination via Healix Mayday",
+                        "Event impact communications for travelers"
+                    ],
+                    "Tools We Use": [
+                        "Egencia - Travel booking feed integration",
+                        "Healix - Medical and security intelligence, emergency assistance",
+                        "Crisis24 - Global event monitoring",
+                        "Chubb - Travel insurance generation",
+                        "Power Automate - Automated advisory emails",
+                        "Asana - Task tracking and follow-up"
+                    ],
+                    "Coverage & Response": [
+                        "24/7/365 coverage for all global travel",
+                        "3-day advance advisories for Medium/High-risk destinations",
+                        "5-day advance country briefings",
+                        "15-minute emergency response via Healix Mayday",
+                        "Real-time event impact communications",
+                        "Proactive welfare checks during global events"
+                    ]
+                }
+            },
+            securitySystems: {
+                title: "🎥 Security Systems Management",
+                sections: {
+                    "What We Deliver": [
+                        "Surveillance Systems: CCTV monitoring, camera health checks, footage retrieval (4-hour SLA)",
+                        "Perimeter Controls & Access Control Systems: Badge readers, door controllers, entry/exit logs",
+                        "Alarm Monitoring: Intrusion detection, fire alarms, duress alerts",
+                        "System Health Monitoring: Uptime tracking, fault detection, vendor coordination",
+                        "Access provisioning for joiners (48-hour SLA)",
+                        "Access removal for leavers (24-hour priority)",
+                        "Access modifications for movers",
+                        "Dual-factor authentication PIN generation for restricted areas",
+                        "Monthly critical area audits (remote bureaus)",
+                        "Global access card stock management"
+                    ],
+                    "Tools We Use": [
+                        "CCTV Systems - Video surveillance and recording",
+                        "Access Control Systems - Badge readers and door controllers",
+                        "Alarm Systems - Intrusion, fire, and duress monitoring",
+                        "Corrigo - Work order management and access control",
+                        "Jira - Leaver ticket processing and tracking",
+                        "Workday - Joiner/Leaver/Mover data feeds",
+                        "Dual Factor Authentication System - PIN generation",
+                        "Ontic - Incident documentation and tracking"
+                    ],
+                    "Coverage & Response": [
+                        "24/7 system monitoring and health checks",
+                        "4-hour CCTV footage retrieval SLA",
+                        "48-hour access provisioning for joiners",
+                        "24-hour priority access removal for leavers",
+                        "Monthly critical area audits",
+                        "Real-time alarm response and coordination",
+                        "Continuous system health monitoring and fault detection",
+                        "Vendor coordination for system maintenance and repairs"
+                    ]
+                }
+            },
+            threatIntel: {
+                title: "🔍 Threat Intelligence & Monitoring",
+                sections: {
+                    "What We Deliver": [
+                        "OSINT monitoring via Ontic platform",
+                        "Digital footprint reports for Executive Committee (daily)",
+                        "Dark web monitoring for ExCo and Flutter brands",
+                        "Negative sentiment analysis (ExCo and Flutter brands)",
+                        "Threat actor profiling (customers and external threats)",
+                        "Customer threat management (betting disputes, office appearances)",
+                        "High-impact event intelligence reports"
+                    ],
+                    "Tools We Use": [
+                        "Ontic - OSINT monitoring and threat intelligence platform",
+                        "Dark Web Monitoring Tools - Brand and ExCo monitoring",
+                        "Social Media Analytics - Sentiment tracking",
+                        "Crisis24 - Global intelligence feeds",
+                        "Healix - Security intelligence",
+                        "Custom threat databases and tracking systems"
+                    ],
+                    "Coverage & Response": [
+                        "24/7 monitoring of digital footprint and threats",
+                        "Daily Executive Committee digital footprint reports",
+                        "2-hour high-impact event intelligence reports",
+                        "Continuous dark web and OSINT monitoring",
+                        "Real-time threat actor tracking and profiling",
+                        "Proactive threat correlation and pattern analysis"
+                    ]
+                }
+            },
+            incidentMgmt: {
+                title: "🚨 Incident Management & Support",
+                sections: {
+                    "What We Deliver": [
+                        "CCTV investigation and footage retrieval (4-hour SLA)",
+                        "Investigation support (not primary handlers)",
+                        "Emergency assistance via Healix Mayday",
+                        "Welfare checks during events",
+                        "Incident documentation in Ontic and Asana",
+                        "Backup support for Regional Security Specialists",
+                        "Hyderabad office transport emergency assistance"
+                    ],
+                    "Tools We Use": [
+                        "Ontic - Incident management and documentation",
+                        "Asana - Task tracking and follow-up",
+                        "CCTV Systems - Investigation and evidence",
+                        "Healix Mayday - Emergency assistance coordination",
+                        "Jira - Incident ticket tracking",
+                        "Email and Slack - Stakeholder communication"
+                    ],
+                    "Coverage & Response": [
+                        "24/7/365 incident response capability",
+                        "4-hour CCTV footage retrieval",
+                        "15-minute emergency assistance response",
+                        "1-hour standard incident response",
+                        "Complete incident documentation and audit trail",
+                        "Continuous backup for Regional Security Specialists"
+                    ]
+                }
+            },
+            execProtection: {
+                title: "👔 Executive Protection",
+                sections: {
+                    "What We Deliver": [
+                        "Digital footprint monitoring for ExCo (24/7)",
+                        "Negative sentiment analysis",
+                        "ExCo travel monitoring",
+                        "Threat correlation and pattern analysis",
+                        "Protective intelligence briefings",
+                        "Dark web monitoring for ExCo mentions"
+                    ],
+                    "Tools We Use": [
+                        "Ontic - OSINT and threat intelligence",
+                        "Dark Web Monitoring Tools - ExCo mention tracking",
+                        "Social Media Analytics - Sentiment analysis",
+                        "Healix - Travel intelligence for ExCo",
+                        "Crisis24 - Global event monitoring",
+                        "Custom ExCo threat tracking systems"
+                    ],
+                    "Coverage & Response": [
+                        "24/7/365 Executive Committee monitoring",
+                        "Daily digital footprint reports",
+                        "Real-time threat correlation",
+                        "Proactive protective intelligence briefings",
+                        "Continuous travel monitoring for ExCo",
+                        "Immediate escalation for credible threats"
+                    ]
+                }
+            },
+            physicalSec: {
+                title: "🏢 Physical Security Operations",
+                sections: {
+                    "What We Deliver": [
+                        "Monthly critical area audits (remote bureaus)",
+                        "Physical security compliance audits (site-level)",
+                        "SOP management for Physical Security and CRESOC",
+                        "ISO audit support globally",
+                        "Gap analysis and corrective actions",
+                        "Backup support for Regional Security Specialists"
+                    ],
+                    "Tools We Use": [
+                        "Audit checklists and compliance frameworks",
+                        "Ontic - Audit documentation and tracking",
+                        "Asana - Corrective action tracking",
+                        "ISO standards and compliance tools",
+                        "Physical security assessment tools",
+                        "SOP management systems"
+                    ],
+                    "Coverage & Response": [
+                        "Monthly critical area audits",
+                        "Site-level compliance audits as scheduled",
+                        "ISO audit support globally",
+                        "Gap analysis and corrective action plans",
+                        "Continuous SOP review and updates",
+                        "Backup support for Regional Security Specialists"
+                    ]
+                }
+            },
+            support247: {
+                title: "📞 24/7 Operational Support",
+                sections: {
+                    "What We Deliver": [
+                        "Round-the-clock monitoring and response",
+                        "Employee query resolution (travel, access, incidents)",
+                        "Workspace team support",
+                        "Event impact communications via Slack",
+                        "Emergency assistance coordination",
+                        "POC/site manager notifications"
+                    ],
+                    "Tools We Use": [
+                        "CRESOC shared email inbox",
+                        "Slack (#cresoc-alerts)",
+                        "Healix Mayday - Emergency line",
+                        "Jira - Ticket tracking",
+                        "Asana - Task management",
+                        "Phone and email communication"
+                    ],
+                    "Coverage & Response": [
+                        "24/7/365 operations (never closes)",
+                        "15-minute emergency response",
+                        "1-hour standard query response",
+                        "Multi-channel accessibility (email, Slack, Healix)",
+                        "Global time zone coverage",
+                        "Immediate POC/site manager notifications"
+                    ]
+                }
+            },
+
+            // OUTPUTS
+            employees: {
+                title: "👥 All Employees",
+                sections: {
+                    "Services Provided": [
+                        "Travel risk management and advisories",
+                        "Emergency assistance coordination",
+                        "Access provisioning and management",
+                        "Incident response and support",
+                        "24/7 operational support and query resolution",
+                        "Event impact communications",
+                        "Welfare checks during global events"
+                    ],
+                    "How They Reach Us": [
+                        "Email: CRESOC shared inbox",
+                        "Slack: #cresoc-alerts channel",
+                        "Emergency: Healix Mayday (24/7 assistance line)",
+                        "Jira: Access request tickets",
+                        "Direct contact via Regional Security Specialists"
+                    ],
+                    "Coverage": [
+                        "All employees globally, regardless of location",
+                        "24/7/365 availability across all time zones",
+                        "15-minute emergency response time",
+                        "1-hour standard query response time",
+                        "Proactive travel advisories and briefings",
+                        "Continuous monitoring and support"
+                    ]
+                }
+            },
+            exco: {
+                title: "👔 Executive Committee",
+                sections: {
+                    "Services Provided": [
+                        "Executive Protection: 24/7 digital footprint monitoring",
+                        "Daily digital footprint reports",
+                        "Negative sentiment analysis",
+                        "Dark web monitoring for ExCo mentions",
+                        "Travel monitoring and protective intelligence",
+                        "Threat correlation and pattern analysis",
+                        "Proactive protective intelligence briefings"
+                    ],
+                    "How They Reach Us": [
+                        "Direct email and phone contact",
+                        "Dedicated Executive Committee support",
+                        "Healix Mayday for travel emergencies",
+                        "Proactive briefings and reports (no request needed)",
+                        "Regional Security Specialist coordination"
+                    ],
+                    "Coverage": [
+                        "24/7/365 monitoring and protection",
+                        "Daily digital footprint reports",
+                        "Real-time threat correlation",
+                        "Immediate response to credible threats",
+                        "Continuous travel monitoring",
+                        "Proactive protective intelligence"
+                    ]
+                }
+            },
+            securityTeams: {
+                title: "🛡️ Security Teams",
+                sections: {
+                    "Services Provided": [
+                        "Backup support for Regional Security Specialists",
+                        "CCTV investigation and footage retrieval (4-hour SLA)",
+                        "Incident documentation in Ontic and Asana",
+                        "Threat intelligence sharing and collaboration",
+                        "Physical security audit support",
+                        "24/7 operational coverage during off-hours"
+                    ],
+                    "How They Reach Us": [
+                        "Direct email and phone contact",
+                        "Slack: #cresoc-alerts channel",
+                        "Ontic platform for incident collaboration",
+                        "Regional Security Specialist direct coordination",
+                        "Escalation protocols and handoffs"
+                    ],
+                    "Coverage": [
+                        "24/7 backup support for Regional Security Specialists",
+                        "4-hour CCTV footage retrieval",
+                        "Continuous threat intelligence sharing",
+                        "Investigation support and documentation",
+                        "Physical security audit coordination",
+                        "Global coverage across all time zones"
+                    ]
+                }
+            },
+            workspace: {
+                title: "🏢 Workspace Teams",
+                sections: {
+                    "Services Provided": [
+                        "Security Systems Management coordination",
+                        "Access control system support",
+                        "CCTV system monitoring and health checks",
+                        "Physical security compliance audits",
+                        "Monthly critical area audits",
+                        "ISO audit support",
+                        "Work order coordination via Corrigo"
+                    ],
+                    "How They Reach Us": [
+                        "Email: CRESOC shared inbox",
+                        "Corrigo: Work order system",
+                        "Slack: #cresoc-alerts channel",
+                        "Direct phone contact",
+                        "Regional Security Specialist coordination"
+                    ],
+                    "Coverage": [
+                        "24/7 security system monitoring",
+                        "Monthly critical area audits",
+                        "Physical security compliance support",
+                        "Access control system coordination",
+                        "Work order processing and tracking",
+                        "ISO audit support globally"
+                    ]
+                }
+            }
+        };
+
+        const modal = document.getElementById('modal');
+        const modalBody = document.getElementById('modal-body');
+        const closeBtn = document.querySelector('.close');
+
+        document.querySelectorAll('[data-modal]').forEach(node => {
+            node.addEventListener('click', function() {
+                const dataKey = this.getAttribute('data-modal');
+                const data = modalData[dataKey];
+                
+                if (data) {
+                    let content = `<h2>${data.title}</h2>`;
+                    
+                    for (const [section, items] of Object.entries(data.sections)) {
+                        content += `<h3>${section}</h3><ul>`;
+                        items.forEach(item => {
+                            content += `<li>${item}</li>`;
+                        });
+                        content += `</ul>`;
+                    }
+                    
+                    modalBody.innerHTML = content;
+                    modal.style.display = 'flex';
+                }
+            });
+        });
+
+        closeBtn.addEventListener('click', function() {
+            modal.style.display = 'none';
+        });
+
+        window.addEventListener('click', function(event) {
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                modal.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
